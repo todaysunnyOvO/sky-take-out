@@ -4,5 +4,8 @@
 *.iml
 *.class
 *.log
+*.err
+*.pid
+.m2repo/
 Thumbs.db
 .DS_Store

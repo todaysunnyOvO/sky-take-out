@@ -109,4 +109,9 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insertBatch(flavors);
         }
     }
+
+    public List<Dish> list(Dish dish) {
+        dish.setStatus(StatusConstant.ENABLE);
+        return dishMapper.list(dish);
+    }
 }
