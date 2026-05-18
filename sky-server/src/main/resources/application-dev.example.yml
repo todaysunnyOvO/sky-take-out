@@ -12,6 +12,9 @@ sky:
     password:
     database: 0
     timeout: 10s
+  wechat:
+    appid: ${WECHAT_APPID:}
+    secret: ${WECHAT_SECRET:}
   alioss:
     endpoint: ${ALI_OSS_ENDPOINT:}
     access-key-id: ${ALI_OSS_ACCESS_KEY_ID:}

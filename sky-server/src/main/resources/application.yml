@@ -43,6 +43,12 @@ sky:
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+    user-secret-key: itcast
+    user-ttl: 7200000
+    user-token-name: authentication
+  wechat:
+    appid: ${WECHAT_APPID:}
+    secret: ${WECHAT_SECRET:}
   alioss:
     endpoint: ${ALI_OSS_ENDPOINT:}
     access-key-id: ${ALI_OSS_ACCESS_KEY_ID:}
