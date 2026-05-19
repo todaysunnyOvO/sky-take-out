@@ -18,6 +18,8 @@ spring:
     password: ${sky.redis.password}
     database: ${sky.redis.database}
     timeout: ${sky.redis.timeout}
+  cache:
+    type: redis
 
 mybatis:
   #mapper配置文件

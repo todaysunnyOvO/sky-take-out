@@ -19,6 +19,8 @@ import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,7 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealDishMapper setmealDishMapper;
 
     @Transactional
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     public void saveWithDish(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealDTO, setmeal);
@@ -61,6 +64,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     public void deleteBatch(List<Long> ids) {
         Integer count = setmealMapper.countByIdsAndStatus(ids, StatusConstant.ENABLE);
         if (count > 0) {
@@ -83,6 +87,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     public void updateWithDish(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealDTO, setmeal);
@@ -99,6 +104,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     public void startOrStop(Integer status, List<Long> ids) {
         if (StatusConstant.ENABLE.equals(status)) {
             Integer count = setmealDishMapper.countBySetmealIdsAndDishStatus(ids, StatusConstant.DISABLE);
@@ -116,6 +122,7 @@ public class SetmealServiceImpl implements SetmealService {
         });
     }
 
+    @Cacheable(cacheNames = "setmealCache", key = "#setmeal.categoryId")
     public List<Setmeal> list(Setmeal setmeal) {
         return setmealMapper.list(setmeal);
     }
