@@ -27,6 +27,8 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +38,10 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -52,6 +56,8 @@ public class OrderServiceImpl implements OrderService {
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
     private AddressBookMapper addressBookMapper;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Transactional
     public OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO) {
@@ -127,6 +133,7 @@ public class OrderServiceImpl implements OrderService {
                 .checkoutTime(LocalDateTime.now())
                 .build();
         orderMapper.update(orders);
+        sendNewOrderMessage(order);
 
         return OrderPaymentVO.builder()
                 .timeStamp(String.valueOf(System.currentTimeMillis() / 1000))
@@ -135,6 +142,14 @@ public class OrderServiceImpl implements OrderService {
                 .signType("MOCK")
                 .paySign("mock-pay-sign")
                 .build();
+    }
+
+    private void sendNewOrderMessage(Orders order) {
+        Map<String, Object> messageMap = new HashMap<>();
+        messageMap.put("type", 1);
+        messageMap.put("orderId", order.getId());
+        messageMap.put("content", "Order number: " + order.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(messageMap));
     }
 
     public PageResult pageQuery4User(int page, int pageSize, Integer status) {
