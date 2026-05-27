@@ -25,6 +25,9 @@ public interface SetmealMapper {
     @Select("select count(id) from setmeal where category_id = #{categoryId}")
     Integer countByCategoryId(Long id);
 
+    @Select("select count(id) from setmeal where status = #{status}")
+    Integer countByStatus(Integer status);
+
     /**
      * 新增套餐
      *
