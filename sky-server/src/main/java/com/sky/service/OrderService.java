@@ -28,6 +28,8 @@ public interface OrderService {
 
     void repetition(Long id);
 
+    void reminder(Long id);
+
     PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO);
 
     OrderStatisticsVO statistics();

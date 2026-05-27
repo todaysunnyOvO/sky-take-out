@@ -152,6 +152,25 @@ public class OrderServiceImpl implements OrderService {
         webSocketServer.sendToAllClient(JSON.toJSONString(messageMap));
     }
 
+    public void reminder(Long id) {
+        Orders order = orderMapper.getById(id);
+        Long userId = BaseContext.getCurrentId();
+
+        if (order == null || !Objects.equals(userId, order.getUserId())) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        if (!Orders.TO_BE_CONFIRMED.equals(order.getStatus())) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        Map<String, Object> messageMap = new HashMap<>();
+        messageMap.put("type", 2);
+        messageMap.put("orderId", id);
+        messageMap.put("content", "Order number: " + order.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(messageMap));
+    }
+
     public PageResult pageQuery4User(int page, int pageSize, Integer status) {
         OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
         ordersPageQueryDTO.setPage(page);
